@@ -1,0 +1,15 @@
+{
+  "name": "task_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "szbgreg",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^5.11.4",
+    "nodemon": "^2.0.6"
+  }
+}
