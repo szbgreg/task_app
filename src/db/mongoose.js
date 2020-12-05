@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { default: validator } = require('validator');
 
 mongoose.connect('mongodb://localhost/task_app', {
   useNewUrlParser: true,
@@ -15,39 +16,60 @@ db.once('open', () => {
 
 const User = mongoose.model('User', {
   name: {
-    type: String
+    type: String,
+    required: true,
+    trim: true
+  },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error('Email is invalid!');
+      }
+    }
+  },
+  password: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 7,
+    validate(value) {
+      if (value.toLowerCase().includes('password')) {
+        throw new Error('Password is wrong!');
+      }
+    }
   },
   age: {
-    type: Number
+    type: Number,
+    default: 0,
+    validate(value) {
+      if (value < 0) {
+        throw new Error('Age must be a positive number!');
+      }
+    }
   }
 });
 
 const Task = mongoose.model('Task', {
   description: {
-    type: String
+    type: String,
+    required: true,
+    trim: true
   },
   completed: {
-    type: Boolean
+    type: Boolean,
+    default: false
   }
 });
 
 const me = new User({
-  name: 'Greg',
-  age: 33
+  name: 'greg',
+  email: 'gergo@asdf.com',
+  password: 'aasdpassword'
 });
 
 me.save()
-  .then(() => {
-    console.log(me);
-  })
-  .catch((err) => console.log(err));
-
-const newTask = new Task({
-  description: 'Phone to the doctor',
-  completed: false
-});
-
-newTask
-  .save()
   .then((data) => console.log(data))
-  .catch((err) => console.log('Error:', err));
+  .catch((err) => console.log(err));
