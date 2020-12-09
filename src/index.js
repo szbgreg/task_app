@@ -6,8 +6,16 @@ const taskRouter = require('./routers/task');
 const app = express();
 const port = process.env.port || 3000;
 
-app.use(express.json());
+const multer = require('multer');
+const upload = multer({
+  dest: 'images'
+});
 
+app.post('/upload', upload.single('upload'), (req, res) => {
+  res.send('Worked');
+});
+
+app.use(express.json());
 app.use('/users', userRouter);
 app.use('/tasks', taskRouter);
 
