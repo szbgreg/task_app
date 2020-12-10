@@ -53,3 +53,27 @@ test('Should not login with non existing user', async () => {
     })
     .expect(400);
 });
+
+test('Should get pofile for user', async () => {
+  await request(app)
+    .get('/users/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(200);
+});
+
+test('Should not get pofile for unauthenticated user', async () => {
+  await request(app).get('/users/me').send().expect(401);
+});
+
+test('Should delete authenticated user pofile', async () => {
+  await request(app)
+    .delete('/users/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(200);
+});
+
+test('Should not delete unauthenticated user pofile', async () => {
+  await request(app).delete('/users/me').send().expect(401);
+});
